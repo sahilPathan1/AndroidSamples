@@ -21,6 +21,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.permissionx.guolindev.PermissionX
 
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.copy.setOnClickListener {
-            if (!binding.resultTextView.text.isBlank()){
+            if (binding.resultTextView.text.isNotBlank()){
                 Toast.makeText(this,getString(R.string.copy),Toast.LENGTH_SHORT).show()
                 binding.resultTextView.visibility = View.VISIBLE
                 val text= binding.resultTextView.text.toString()
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.share.setOnClickListener {
-            if (!binding.resultTextView.text.isBlank()){
+            if (binding.resultTextView.text.isNotBlank()){
                 binding.resultTextView.visibility = View.VISIBLE
                 val text=binding.resultTextView.text.toString()
                 shareText(text)
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -87,8 +89,8 @@ class MainActivity : AppCompatActivity() {
             }
             image?.let {
                 recognizer.process(it)
-                    .addOnSuccessListener {
-                        binding.resultTextView.text= it.text
+                    .addOnSuccessListener { it1 ->
+                        binding.resultTextView.text= it1.text
                         binding.resultTextView.visibility = View.VISIBLE
                         binding.loadingLottie.visibility = View.GONE
                     }
@@ -104,9 +106,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun shareText(text: String){
         val textIntent=Intent()
-        textIntent.setAction(Intent.ACTION_SEND)
+        textIntent.action = Intent.ACTION_SEND
         textIntent.putExtra(Intent.EXTRA_TEXT,text)
-        textIntent.setType("text/plain")
+        textIntent.type = "text/plain"
         startActivity(textIntent)
 
     }
